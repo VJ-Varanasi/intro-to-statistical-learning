@@ -9,22 +9,62 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Downloading Packages and Data
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library(MASS)
+library(ISLR)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+## Working with the Boston Dataset
+```{r}
+?Boston
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Running Simple Linear Regression 
+```{r}
+lm.fit = lm(medv ~ lstat, data= Boston)
+summary(lm.fit)
+```
+
+## Retrieving SLR coefficients 
+
+```{r}
+names(lm.fit)
+
+coef(lm.fit)
+```
+
+## Confidence Intervals
+```{r}
+confint(lm.fit)
+```
+
+## Confidence and Prediction Intervals 
+```{r}
+predict(lm.fit, data.frame(lstat= c(5,10,15)), interval = "confidence")
+```
+
+```{r}
+predict(lm.fit, data.frame(lstat= c(5,10,15)), interval = "prediction")
+```
+
+## Plotting 
+```{r}
+attach(Boston)
+plot(lstat, medv)
+abline(lm.fit)
+```
+
+```{r}
+par ( mfrow =c(2 ,2) )
+plot(lm.fit )
+```
+
+```{r}
+plot( predict (lm.fit ), residuals (lm.fit ))
+plot( predict (lm.fit ), rstudent (lm.fit ))
+```
+Appears to be some unexplained relationship
+
+## Multiple Linear Regression
