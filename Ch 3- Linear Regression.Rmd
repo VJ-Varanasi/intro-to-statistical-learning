@@ -68,3 +68,77 @@ plot( predict (lm.fit ), rstudent (lm.fit ))
 Appears to be some unexplained relationship
 
 ## Multiple Linear Regression
+
+```{r}
+lm.fit= lm(medv ~ ., data = Boston)
+summary(lm.fit)
+```
+
+
+```{r}
+library(car)
+vif(lm.fit)
+```
+
+
+If we want to remove age
+
+```{r}
+lm.fit1 = lm(medv ~ . - age, data=Boston)
+```
+
+or alternatively
+
+```{r}
+lm.fit1 = update(lm.fit, ~. -age)
+```
+
+
+## Interaction Terms
+
+```{r}
+lm_int = lm(medv ~ lstat*age, data = Boston)
+summary(lm_int)
+```
+
+## Non-linear Transformation
+
+```{r}
+lm_trans = lm(medv ~ lstat+ I(lstat^2), data = Boston)
+summary(lm_trans)
+```
+
+
+```{r}
+lm_slr = lm(medv~lstat, data = Boston)
+anova(lm_slr, lm_trans)
+```
+
+## Plots
+
+```{r}
+par ( mfrow =c(2 ,2) )
+plot(lm_trans)
+```
+
+## Qualitative Predictors
+
+Using Carsets dataset
+```{r}
+#fix(Carseats)
+names(Carseats)
+?Carseats
+```
+
+```{r}
+lm_fit =lm(Sales~.+ Income : Advertising +Price:Age , data=Carseats)
+summary(lm_fit)
+```
+
+
+Find coding used for qualitative variables
+```{r}
+attach(Carseats)
+contrasts(ShelveLoc)
+```
+
