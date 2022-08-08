@@ -40,6 +40,66 @@ data=Smarket , family = binomial )
 summary(glm.fit)
 ```
 
+Anlayzing results
+
+```{r}
+coef(glm.fit)
+```
+
+```{r}
+glm.probs = predict(glm.fit, type= "response")
+glm.pred = rep("Down", 1250)
+glm.pred[glm.probs > 0.5] = "Up"
+```
+
+```{r}
+table(glm.pred, Direction)
+```
+
+Correct prediction rate
+```{r}
+mean(glm.pred == Direction)
+```
 
 
+
+### Creating Training Data
+
+```{r}
+train = (Year < 2005)
+Smarket.2005 = Smarket[!train,]
+Direction.2005 = Direction[!train]
+```
+
+refitting the model
+
+```{r}
+glm.fit =glm ( Direction~Lag1+ Lag2+ Lag3+Lag4+ Lag5+Volume ,
+data=Smarket , family = binomial , subset =train )
+
+glm.probs = predict (glm.fit , Smarket.2005 , type ="response")
+```
+
+```{r}
+glm.pred = rep("Down", 252)
+glm.pred[glm.probs > 0.5] = "Up"
+```
+
+```{r}
+table(glm.pred, Direction.2005)
+```
+
+
+```{r}
+mean(glm.pred == Direction.2005)
+```
+
+## Linear Discriminant Analysis
+
+```{r}
+library(MASS)
+lda.fit =lda ( Direction~Lag1+ Lag2+ Lag3+Lag4+ Lag5+Volume ,
+data=Smarket , subset =train )
+lda.fit
+```
 
